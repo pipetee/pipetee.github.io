@@ -1,0 +1,271 @@
+@font-face {
+    font-family: "Arvo";
+    src: local("Arvo"),
+         url("/style/fonts/Arvo/Arvo-Regular.ttf");
+}
+
+body {
+    font-family: 'Arvo', 'Georgia', 'Times', 'Hei', 'Hiragino Sans GB', sans-serif;
+    color: #333333;
+    /* background: #4C9FA8 url(./background2.jpg) repeat 0 0; 
+    background-repeat: repeat; */
+    font-size: 14px;
+    max-width: 720px;
+    margin-right:auto;
+    margin-left:auto;
+    padding-left:5px;
+    padding-right:5px;
+    line-height: 1.5em;
+}
+
+#content {
+    color: #000;
+    background: #FFF;
+    padding: 20px 20px 10px 20px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+#postamble {
+    padding: 0px 20px 20px 20px;
+}
+
+h1:after {
+    content: "";
+    display: block;
+    background-color: #a55d5d;
+    margin: 10px -5px 10px -5px;
+    height: 2px;
+
+}
+
+#text-footnotes:before, .ABSTRACT:after, #table-of-contents:after, .cc-license:before {
+    font-size: 13px;
+    content: "";
+    display: block;
+    background-color: #dcdbda;
+    margin: 10px 0px 10px -5px;
+    height: 2px;
+    width: 100px;
+}
+
+
+.cc-license {
+    font-size:12px !important;
+    font-style: italic;
+    color: grey;
+    text-align: right;
+}
+
+.cc-license a:link, .cc-license a:visited, .cc-license a:hover, .cc-license a:active {
+    color: grey;
+}
+
+/* #content:after { */
+/*     content: "Copyright@yam 2020"; */
+/*     height: 43px; */
+/*     line-height: 43px; */
+/*     text-align: left; */
+/*     /\* background-color: #2D7176; *\/ */
+/*     margin: 10px -20px -20px -20px; */
+/*     padding-left: 10px; */
+/*     font-size: 12px; */
+/*     color: #000; */
+/*     display: block; */
+/* } */
+
+.disqus_note {
+    margin-top: 10px;
+}
+
+.disqus_note:before {
+    content: "";
+    display: block;
+    background-color: #dcdbda;
+    margin: 10px 0px 5px -20px;
+    height: 2px;
+    width: 180px
+}
+
+
+cite, code, pre, tt, samp {
+    font-family:
+        'PT Mono', 'Lucida Console', 'Consolas','Deja Vu Sans Mono','Bitstream Vera Sans Mono',
+        'Fira Code', 'Monaco','Hei', 'Hiragino Sans GB', monospace;
+    font-size: 13px;
+    line-height: 1.2em;
+}
+
+
+blockquote {
+    border-left-color: grey;
+    font-style: italic;
+    font-size: 1em;
+    border-left-width: 10px;
+    border-left-style: solid;
+    padding: 0 20px;
+    margin: 10px 20px;
+}
+
+a.coderef, .coderef-off {
+    background: gray;
+}
+
+/* code { */
+/*     padding: 3px; */
+/*     background: #e6e6e6; */
+/*     border-radius: 3px; */
+/* } */
+
+pre {
+    padding: 8px;
+    border-radius: 3px!important;
+    overflow-x: unset!important;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family:
+        Arvo, Georgia, Times, "Kaiti SC", "KaiTi",  'Hei', 'Hiragino Sans GB', serif;
+    color: #600000;
+}
+
+h1 {
+    position: relative;
+    /* margin-top: 40px; */
+    font-size: 2.5em !important;
+    font-weight: normal;
+    line-height: 1.1;
+    color: #600000;
+}
+
+h2 {
+    font-size: 1.8em !important;
+    font-weight: normal;
+}
+
+h3 {
+    font-size: 1.6em !important;
+    font-weight: normal;
+}
+
+h4 {
+    font-size: 1.2em !important;
+    font-weight: normal;
+}
+
+h5 {
+    font-size: 1.0em !important;
+    font-weight: normal;
+}
+
+#table-of-contents h1,
+#table-of-contents h2,
+#table-of-contents h3,
+#table-of-contents h4,
+#table-of-contents h5 {
+    display: none;
+}
+
+
+a, a:link {
+    color: #C31818;
+    text-decoration: none;
+    /* border-bottom: 1px dotted #800; */
+}
+
+a:visited {
+    color: #800;
+}
+
+.org-right {
+    text-align: right;
+}
+
+.org-left {
+    text-align: left;
+}
+
+.org-center {
+    text-align: center;
+}
+
+/********** Begin of table **********/
+table {
+    empty-cells:show;
+    border-collapse: collapse;
+    font-size: 13px;
+    background-color: white;
+}
+
+thead {
+    background: #d2d7dc;
+    color: #444;
+}
+
+thead th {
+    padding: 3px 5px;
+    border: 1px solid #E2E2E2;
+}
+
+tbody td {
+    padding: 2px 5px;
+    border: 1px solid #E2E2E2;
+}
+
+tbody tr:nth-child(2n) {
+    background: #f6f8fb;
+}
+
+tbody tr:hover {
+    background: #fee;
+}
+
+.org-center {
+    /*hack 把 center 当作 nowrap 的 left 使用*/
+    text-align: left;
+    white-space: nowrap;
+}
+/********** End of table **********/
+
+
+img {
+    max-width: 100%;
+}
+
+.figure p:last-child {
+    text-align: center;
+    font-style: italic;
+    font-size: 13px;
+    width: 90%;
+    margin: auto;
+}
+
+.footpara {
+    display: inline;
+    margin-left: 2px;
+}
+
+.footnotes {
+    display:none;
+}
+
+#text-footnotes {
+    font-size: 13px;
+}
+
+#postamble {
+    font-size: 13px;
+    margin-top: -30px;
+}
+
+.left-postamble {
+    margin-left: 15px;
+    display: inline;
+}
+
+.right-postamble {
+    margin-right: 10px;
+    text-align: right;
+    display: inline;
+    float: right;
+}

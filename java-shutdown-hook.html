@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-07-14 Tue 14:30 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Java 中的优雅停机</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yam" />
+<link rel="stylesheet" href="./style/org-base.css" />
+<script src="./style/baidu-statistics.js"></script>
+<link rel="stylesheet" href="./style/highlight/styles/vs.css">
+<script src="./style/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="./style/org-common.js"></script>
+<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="./style/org-base.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Java 中的优雅停机</h1>
+<div class="ABSTRACT">
+<p>
+停机的时候尽量让正在运行的任务不报错的退出就是所谓的优雅停机了，一般的做法就是采用停机事件监听机制。
+这里介绍下 java 应用中的优雅停机。
+</p>
+
+</div>
+
+<div id="outline-container-org8ddd9e2" class="outline-2">
+<h2 id="org8ddd9e2">JDK 中的 Runtime.addShutdownHook</h2>
+<div class="outline-text-2" id="text-org8ddd9e2">
+<p>
+JDK 自带的 Hook 处理，接收一个 Thread 对象。 JVM 收到退出请求时会挨个激活这些线程。
+可以用来做一些退出的清理工作，例如 <a href="https://dubbo.apache.org/zh-cn/blog/dubbo-gracefully-shutdown.html">Dubbo 的优雅停机</a> 就是通过这种方式实现的.
+使用时需要注意
+</p>
+<ul class="org-ul">
+<li>不保证 Hook 一定会被执行，例如 <code>kill -9</code></li>
+<li>没有顺序保证，Hook 的 Thread 对象会作为 IdentityHashMap 的 key，激活时的顺序是用迭代器访问这个 keySet 的顺序</li>
+<li>Hook 里面的线程执行完了，JVM 才会退出。如果你的处理逻辑执行时间过长，可能
+<ul class="org-ul">
+<li>等待 Hook 线程完成，JVM 长时间不退出</li>
+<li><p>
+外部环境预期你短时间内就会退出，提前结束了 JVM 进程，Hook 线程也就会提前终止了. 例如常见的套路
+</p>
+<pre class="example">
+shutdown
+while(!timeout)
+    check
+shutdownNow
+</pre></li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgac92edb" class="outline-2">
+<h2 id="orgac92edb">第三方组件 hook 的管理</h2>
+<div class="outline-text-2" id="text-orgac92edb">
+<p>
+JDK 中相关的实现类是 <code>ApplicationShutdownHooks</code> 
+</p>
+
+<div class="org-src-container">
+<pre class="src java">class ApplicationShutdownHooks {
+    /* The set of registered hooks */
+    private static IdentityHashMap&lt;Thread, Thread&gt; hooks;
+
+    // ...
+}
+</pre>
+</div>
+
+<p>
+这些访问权限导致没法直接控制已经注册的 hooks，只能用到反射来操作这个 Map 了。
+注意下，这个 Map key 是线程对象本身，如果没有指定线程名称就很难判断线程的作用了。
+所以，指定线程的名称是个好习惯。
+</p>
+
+<p>
+如果要控制顺序怎么办？这是一个跟本文无关的问题，自己想办法就行了，众所周知，控制优先级是不行的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8ba49b3" class="outline-2">
+<h2 id="org8ba49b3">优雅的线程池退出</h2>
+<div class="outline-text-2" id="text-org8ba49b3">
+<p>
+优雅的退出时碰到最多的可能就是线程池的关闭退出了，
+如何才能减少对停机时线程池中正在运行的线程的影响呢？
+<code>ExecutorService</code> 的 javadoc 中有一段两相提交关闭线程池的示例代码。抄它即可
+</p>
+
+<div class="org-src-container">
+<pre class="src java">void shutdownAndAwaitTermination(ExecutorService pool) {
+   pool.shutdown(); // Disable new tasks from being submitted
+   try {
+     // Wait a while for existing tasks to terminate
+     if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
+       pool.shutdownNow(); // Cancel currently executing tasks
+       // Wait a while for tasks to respond to being cancelled
+       if (!pool.awaitTermination(60, TimeUnit.SECONDS))
+           System.err.println("Pool did not terminate");
+     }
+   } catch (InterruptedException ie) {
+     // (Re-)Cancel if current thread also interrupted
+     pool.shutdownNow();
+     // Preserve interrupt status
+     Thread.currentThread().interrupt();
+   }
+ }
+</pre>
+</div>
+
+<p>
+这里的 catch 块中的再次调用一下中断这个细节的处理挺优雅的。
+其实不调用也没太大关系，只是线程最后的结束状态不一样而已。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgddb19f1" class="outline-2">
+<h2 id="orgddb19f1">spring 中的优雅停机</h2>
+<div class="outline-text-2" id="text-orgddb19f1">
+<p>
+spring 也通过注册 JDK 的 shutdownHook 提供了 ContextClosedEvent 事件,
+看 <code>AbstractApplicationContext.registerShutdownHook</code> 。
+</p>
+
+<div class="org-src-container">
+<pre class="src java">public void registerShutdownHook() {
+    if (this.shutdownHook == null) {
+        // No shutdown hook registered yet.
+        this.shutdownHook = new Thread() {
+                @Override
+                public void run() {
+                    synchronized (startupShutdownMonitor) {
+                        doClose();
+                    }
+                }
+            };
+        Runtime.getRuntime().addShutdownHook(this.shutdownHook);
+    }
+}
+</pre>
+</div>
+
+<p>
+除了在 JVM 退出时被触发，这个方法在主动调用 ApplicationContext.close() 的时候也会也会被调用。
+doClose 方法中会按顺序执行：
+</p>
+<ul class="org-ul">
+<li>发布 ContextClosedEvent 事件，这个事件的处理在整个 doClose 的过程中是同步执行的</li>
+<li>处理 LifeCycle 接口，<a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#beans-factory-lifecycle-processor">SmartLifeCycle</a> 就是它的一个子类，通常我们说的 <a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-graceful-shutdown">springboot 的优雅停机</a> 就是基于这个特性实现的。
+如果你要让自己的组件优雅退出，推荐使用这个特性，例如，RocketMQ 官方提供的 client 的 <a href="https://github.com/apache/rocketmq-spring">starter</a>。</li>
+<li>处理 bean 的销毁，这个过程是并行的。如果指定了依赖会先销毁依赖 bean</li>
+</ul>
+
+<p>
+这里是监听 ContextClosedEvent 事件时执行时的调用栈（springboot 2.1.3.RELEASE/spring 5.1.5.RELEASE）
+</p>
+<pre class="example">
+at com.yam.demo.ShutdownListener.onApplicationEvent(ShutdownListener.java:9)
+at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:172)
+at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:165)
+at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:139)
+at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:402)
+at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:359)
+at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1009)
+at org.springframework.context.support.AbstractApplicationContext$1.run(AbstractApplicationContext.java:945)
+</pre>
+
+<p>
+这里是监听 SmartLifeCycle 组件退出时的调用栈
+</p>
+<pre class="example">
+at com.yam.service.SmartLifeCycleComponent.stop(SmartLifeCycleComponent.java:37)
+at org.springframework.context.SmartLifecycle.stop(SmartLifecycle.java:111)
+at org.springframework.context.support.DefaultLifecycleProcessor.doStop(DefaultLifecycleProcessor.java:238)
+at org.springframework.context.support.DefaultLifecycleProcessor.access$300(DefaultLifecycleProcessor.java:53)
+at org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.stop(DefaultLifecycleProcessor.java:377)
+at org.springframework.context.support.DefaultLifecycleProcessor.stopBeans(DefaultLifecycleProcessor.java:210)
+at org.springframework.context.support.DefaultLifecycleProcessor.onClose(DefaultLifecycleProcessor.java:128)
+at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1018)
+at org.springframework.context.support.AbstractApplicationContext$1.run(AbstractApplicationContext.java:945)
+</pre>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div class="cc-license">
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/3.0/">
+<img alt="by-nc-sa-v3.0" style="border-width:0; margin:-3px;" src="./style/l/by-nc-sa/3.0/80x15.png" />
+如无特别说明本站所有作品均采用知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议进行许可
+</a>
+</div>
+</div>
+</body>
+</html>

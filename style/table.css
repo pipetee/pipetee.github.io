@@ -1,0 +1,1 @@
+table {empty-cells:show; border-collapse: collapse; font-size: 12px;} thead {background: #e0e0e0; color: #444;} thead th {padding: 8px 5px; border: 1px solid #E2E2E2;} tbody td {padding: 6px 5px; border: 1px solid #E2E2E2;} tbody tr:nth-child(2n) {background: #F1F1F1;} tbody tr:hover {background: #fee;}

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-07-14 Tue 14:30 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>使用 Nexus 搭建 PyPi 私服</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yam" />
+<link rel="stylesheet" href="./style/org-base.css" />
+<script src="./style/baidu-statistics.js"></script>
+<link rel="stylesheet" href="./style/highlight/styles/vs.css">
+<script src="./style/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="./style/org-common.js"></script>
+<script src="/style/jquery-3.2.1/jquery.min.js"></script>
+<script src="/style/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/style/zoom.css" />
+<script src="/style/zoom.js"></script>
+<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="./style/org-base.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">使用 Nexus 搭建 PyPi 私服</h1>
+
+<div class="figure">
+<p><img src="pypi-nexus/pypi-nexus.png" alt="pypi-nexus.png" data-action="zoom" />
+</p>
+</div>
+
+<div class="ABSTRACT">
+<p>
+Nexus Repository Manager OSS 原本被大家用来做 maven 私服， 3.x 支持了 PyPi。
+安装使用比较简单。
+</p>
+
+</div>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org86eba29">安装 Nexus Repository Manager OSS 3.x</a></li>
+<li><a href="#orge9eeda1">PyPi 支持</a></li>
+<li><a href="#orgf845335">使用</a>
+<ul>
+<li><a href="#orgfdf7c16">使用 pip 命令行安装</a></li>
+<li><a href="#orge29b372">使用 easy_install</a></li>
+<li><a href="#orge47b250">全局配置</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org86eba29" class="outline-2">
+<h2 id="org86eba29">安装 Nexus Repository Manager OSS 3.x</h2>
+<div class="outline-text-2" id="text-org86eba29">
+<p>
+<a href="https://www.sonatype.com/nexus-repository-oss">https://www.sonatype.com/nexus-repository-oss</a> 下载，解压，运行即可
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge9eeda1" class="outline-2">
+<h2 id="orge9eeda1">PyPi 支持</h2>
+<div class="outline-text-2" id="text-orge9eeda1">
+<p>
+默认登录用户名/密码： admin/admin123
+</p>
+
+<p>
+官方文档地址： <a href="https://books.sonatype.com/nexus-book/reference3/pypi.html">https://books.sonatype.com/nexus-book/reference3/pypi.html</a>
+</p>
+
+<p>
+简单讲：
+</p>
+<ol class="org-ol">
+<li><p>
+建立官方代理仓库
+</p>
+
+<p>
+填写远程索引地址时用 <code>https://pypi.python.org/</code> ，
+不要用 <code>https://pypi.python.org/pypi</code> .
+</p></li>
+
+<li>建立 hosted 仓库，用于内部使用</li>
+
+<li>建立 group 仓库把官方代理和 hosted 仓库包含进来</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgf845335" class="outline-2">
+<h2 id="orgf845335">使用</h2>
+<div class="outline-text-2" id="text-orgf845335">
+</div>
+<div id="outline-container-orgfdf7c16" class="outline-3">
+<h3 id="orgfdf7c16">使用 pip 命令行安装</h3>
+<div class="outline-text-3" id="text-orgfdf7c16">
+<pre class="example">
+pip install flask -i http://your-hostname.com:8081/repository/myrepos/simple/ --trusted-host your-hostname.com
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orge29b372" class="outline-3">
+<h3 id="orge29b372">使用 easy_install</h3>
+<div class="outline-text-3" id="text-orge29b372">
+<p>
+<code>setup.cfg</code> 添加
+</p>
+<pre class="example">
+[easy_install]
+index-url=http://your-hostname.com:8081/repository/ypypi/simple
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orge47b250" class="outline-3">
+<h3 id="orge47b250">全局配置</h3>
+<div class="outline-text-3" id="text-orge47b250">
+<ul class="org-ul">
+<li><p>
+发布
+</p>
+
+<p>
+<code>~/.pypirc</code> 中添加
+</p>
+<pre class="example">
+[distutils]
+index-servers =
+   nexus
+
+[nexus]
+repository = http://your-hostname.com:8081/repository/pypi-internal/
+username = admin
+password = admin123
+</pre>
+
+<p>
+发布使用
+</p>
+<div class="org-src-container">
+<pre class="src bash">python setup.py sdist
+python setup.py bdist_wheel
+twine upload -r nexus &lt;filename&gt;
+</pre>
+</div>
+
+<p>
+更多关于打包发布的细节，文档在这里
+<a href="https://packaging.python.org/current/">https://packaging.python.org/current/</a>
+</p></li>
+
+<li><p>
+获取
+</p>
+
+<p>
+<code>~/.pip/pip.conf</code> 中添加
+</p>
+<pre class="example">
+[global]
+index = http://your-hostname:8081/repository/pypi-all/pypi
+index-url = http://your-hostname:8081/repository/pypi-all/simple
+</pre></li>
+</ul>
+
+
+<p>
+现在可以愉快的使用了，记得改密码。关于权限和用户组的配置见原文档。
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div class="cc-license">
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/3.0/">
+<img alt="by-nc-sa-v3.0" style="border-width:0; margin:-3px;" src="./style/l/by-nc-sa/3.0/80x15.png" />
+如无特别说明本站所有作品均采用知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议进行许可
+</a>
+</div>
+</div>
+</body>
+</html>

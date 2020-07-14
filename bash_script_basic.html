@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-07-14 Tue 14:30 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bash Script 教程</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yam" />
+<link rel="stylesheet" href="./style/org-base.css" />
+<link rel="stylesheet" href="./style/highlight/styles/vs.css">
+<script src="./style/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="./style/org-common.js"></script>
+<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="./style/org-base.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Bash Script 教程</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgc2ffad5">1. 简介</a>
+<ul>
+<li><a href="#org5b720b0">1.1. hello world</a></li>
+<li><a href="#org6301ded">1.2. 参数处理</a></li>
+</ul>
+</li>
+<li><a href="#org58702de">2. 元字符与内置变量</a>
+<ul>
+<li><a href="#orge68c8a3">2.1. 条件表达式 <code>[[]]</code> </a></li>
+<li><a href="#org6e678eb">2.2. 算术上下文 <code>(())</code> </a></li>
+<li><a href="#orgb28c01e">2.3. <code>$</code></a></li>
+</ul>
+</li>
+<li><a href="#orgfd59e87">3. 控制结构</a></li>
+<li><a href="#org72a6578">4. 字符串处理</a></li>
+<li><a href="#orge1b7145">5. 变量类型</a></li>
+<li><a href="#org6a264ed">6. 数字处理</a></li>
+<li><a href="#org2a21236">7. Debug</a></li>
+<li><a href="#orgdd114a6">8. What Next?</a></li>
+</ul>
+</div>
+</div>
+<div class="ABSTRACT">
+<p>
+本文假定你已经有了一种编程语言和一些命令行使用经验。如果没有，建议你先学习一些命令行。
+</p>
+
+<p>
+读完此篇，你应该能写一些功能比较复杂的脚本。
+</p>
+
+</div>
+
+<div id="outline-container-orgc2ffad5" class="outline-2">
+<h2 id="orgc2ffad5"><span class="section-number-2">1</span> 简介</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org5b720b0" class="outline-3">
+<h3 id="org5b720b0"><span class="section-number-3">1.1</span> hello world</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src shell">#!/usr/bin/env bash
+# 上面指定了使用什么解释器来解释此脚本
+
+# A Simple Hello World Script
+
+# 定义了一个变量
+HELLO_WORLD="Hello World!"
+
+# 定义了一个函数
+sayHello() {
+    # 使用了变量
+    echo $HELLO_WORLD
+}
+
+# 调用函数
+sayHello
+
+# 正常退出
+exit
+</pre>
+</div>
+
+<p>
+如何执行? 第一种方式 <code>bash &lt;path-to-script&gt;</code> 。另一种给脚本加上可执行属性，直接用文件路径调用：
+</p>
+<ul class="org-ul">
+<li><code>chmod +x &lt;path-to-script&gt;</code></li>
+<li><code>&lt;path-to-script&gt;</code></li>
+</ul>
+
+<p>
+上面这个例子中我们可以看到定义变量使用 <code>var=value</code> 即可，注意等号左右没有空格。
+使用一个变量在前面加上美元符号即可。
+另外我们还学到了，函数如何定义和调用。这是一个很重要的编程概念。
+有了变量和函数，你已经能把脚本写的相当复杂了。
+</p>
+
+<div class="org-src-container">
+<pre class="src shell">foo() {}
+
+foo {} # 括号可以省略，不过建议保留，增加可读性
+</pre>
+</div>
+
+<p>
+我们接下来看如何处理函数的参数
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6301ded" class="outline-3">
+<h3 id="org6301ded"><span class="section-number-3">1.2</span> 参数处理</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src shell">#!/usr/bin/env bash
+s() {
+    echo $# $@
+    echo $1
+
+    shift
+    echo $# $@
+    echo $1
+
+    shift 2
+    echo $# $@
+    echo $1
+}
+
+ss() {
+    for i in $@; do
+        echo $i
+    done
+}
+
+s "a" "b" "c" "d"
+echo "==="
+ss "a" "b" "c" "d"
+</pre>
+</div>
+
+<p>
+输出：
+</p>
+<pre class="example">
+4 a b c d
+a
+3 b c d
+b
+1 d
+d
+===
+a
+b
+c
+d
+</pre>
+
+<ul class="org-ul">
+<li><code>$#</code> 传入参数的个数</li>
+<li><code>$n</code> 引用第n个参数，第9个之后要使用 <code>${10}</code> 这样的方式</li>
+<li><code>$@</code> 传入的所有参数数组</li>
+</ul>
+
+<p>
+将上面的最后一行改为下面的形式就可以从命令行接收参数了
+</p>
+<div class="org-src-container">
+<pre class="src shell">s $@
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org58702de" class="outline-2">
+<h2 id="org58702de"><span class="section-number-2">2</span> 元字符与内置变量</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+元字符是一类有特殊含义的字符，包括  <code>$'"\[]!&gt;&lt;|;{}()#~</code>
+</p>
+<ul class="org-ul">
+<li><code>''</code> <code>""</code> <code>\</code> <code>!</code> <code>;</code> ，含义与 C 语言中相同</li>
+<li><code>#</code> 后面的字符被认为是注释</li>
+<li><code>&gt;&lt;</code> io 重定向<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup></li>
+<li><code>|</code> 管道<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup></li>
+<li><code>~</code> home 目录的简写</li>
+</ul>
+</div>
+
+<div id="outline-container-orge68c8a3" class="outline-3">
+<h3 id="orge68c8a3"><span class="section-number-3">2.1</span> 条件表达式 <code>[[]]</code> <sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup> <sup>, </sup><sup><a id="fnr.7" class="footref" href="#fn.7">7</a></sup></h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+用来测试一个条件的真值的表达式，用在 <code>if, while, until</code> 的判断分支中，注意括号内左右的空格必须要有
+</p>
+
+<p>
+另外，条件表达式也可以与 <code>&amp;&amp;</code> 和 <code>||</code> 一起用，写起来更加简洁
+</p>
+
+<div class="org-src-container">
+<pre class="src shell">[[ -f path_of_file ]] &amp;&amp; echo $path_of_file
+[[ -f path_of_file ]] || echo "Can not read file: $path_of_file"
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6e678eb" class="outline-3">
+<h3 id="org6e678eb"><span class="section-number-3">2.2</span> 算术上下文 <code>(())</code> <sup><a id="fnr.8" class="footref" href="#fn.8">8</a></sup></h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+只支持整型
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb28c01e" class="outline-3">
+<h3 id="orgb28c01e"><span class="section-number-3">2.3</span> <code>$</code></h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+常用的内置变量<sup><a id="fnr.9" class="footref" href="#fn.9">9</a></sup>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">名称</th>
+<th scope="col" class="org-left">解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">$0, $1&#x2026;</td>
+<td class="org-left">$0 脚本的执行路径，$n: 第 n 个参数</td>
+</tr>
+
+<tr>
+<td class="org-left">$#</td>
+<td class="org-left">参数个数</td>
+</tr>
+
+<tr>
+<td class="org-left">$*</td>
+<td class="org-left">所有参数合在一起的字符串</td>
+</tr>
+
+<tr>
+<td class="org-left">$@</td>
+<td class="org-left">所有参数列表</td>
+</tr>
+
+<tr>
+<td class="org-left">$!</td>
+<td class="org-left">最后一个后台job的pid</td>
+</tr>
+
+<tr>
+<td class="org-left">$?</td>
+<td class="org-left">上一条命令的退出码</td>
+</tr>
+
+<tr>
+<td class="org-left">$$</td>
+<td class="org-left">当前脚本的 pid</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgfd59e87" class="outline-2">
+<h2 id="orgfd59e87"><span class="section-number-2">3</span> 控制结构</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+<pre class="src shell">#!/usr/bin/env bash
+
+# seq n =&gt; 1 ... n
+# seq m n =&gt; m ... n
+# seq m s n =&gt; m ...(s)tep... n
+for i in $(seq 10); do
+    echo $i
+
+    if [ $i -gt 5 ]; then  # Legacy Bourne
+        echo "$i &gt; 5"
+    elif (( i &gt; 3)); then  # POSIX
+        echo "$i &gt; 3"
+    else
+        echo "$i &lt;=3"
+    fi
+done
+
+
+declare -i count=0 # declare a integer variable
+while (( count &lt; 10 )); do
+    echo "while count: $count"
+    let count=count+1  # $ can be dropped in let statement
+done
+
+until (( count &lt; 0 )); do
+    echo "until count: $count"
+    let count=count-1
+done
+
+case "$1" in
+    start)
+        echo "start stuff"
+        ;;
+    stop)
+        echo "stop stuff"
+        ;;
+    restart)
+        echo "restart stuff"
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+</pre>
+</div>
+
+<p>
+这里展示了基本的控制结构
+</p>
+<ul class="org-ul">
+<li><code>$()</code> 简单理解为限执行括号中的命令,拿到返回值后，再执行脚本，比较老的写法为 <code>`cmd`</code></li>
+<li><code>seq</code> 是一条快速产生数字序列的命令
+<ul class="org-ul">
+<li>单参数N， 1 到 N, N 个数字</li>
+<li>两参数M N, M 到 N， N-M+1 个数字</li>
+<li>三参数 M s N， M 到 N，步长为 s</li>
+</ul></li>
+<li><code>(())</code> <a href="http://mywiki.wooledge.org/ArithmeticExpression">算术上下文</a>, 在这里可以省略变量前的美元符号，变量作为整数参与计算， <code>let</code> 与 <code>(())</code> 的作用完全一样。
+<code>[]</code> 是旧的写法， <code>(())</code> 为 POSIX 写法<sup><a id="fnr.10" class="footref" href="#fn.10">10</a></sup>。</li>
+</ul>
+</div>
+</div>
+
+
+
+<div id="outline-container-org72a6578" class="outline-2">
+<h2 id="org72a6578"><span class="section-number-2">4</span> 字符串处理</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+参考文档
+</p>
+
+<ul class="org-ul">
+<li><code>man cut</code></li>
+<li><code>man read</code> （实际上会带你到 bash_builtins 的 man page）</li>
+<li><a href="https://www.tldp.org/LDP/abs/html/string-manipulation.html">https://www.tldp.org/LDP/abs/html/string-manipulation.html</a></li>
+<li><a href="https://stackoverflow.com/questions/918886/how-do-i-split-a-string-on-a-delimiter-in-bash">https://stackoverflow.com/questions/918886/how-do-i-split-a-string-on-a-delimiter-in-bash</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge1b7145" class="outline-2">
+<h2 id="orge1b7145"><span class="section-number-2">5</span> 变量类型</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+bash 中并没有类型<sup><a id="fnr.11" class="footref" href="#fn.11">11</a></sup>, 把所有的变量当作字符串就好。
+对于整型和数组类型，可以通过分析 <code>declare -p</code> 的结果得到<sup><a id="fnr.12" class="footref" href="#fn.12">12</a></sup>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6a264ed" class="outline-2">
+<h2 id="org6a264ed"><span class="section-number-2">6</span> 数字处理</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+bash 原生只支持整数，下面展示了计算 1-N 的整数和的递归解法<sup><a id="fnr.13" class="footref" href="#fn.13">13</a></sup>
+</p>
+
+<div class="org-src-container">
+<pre class="src shell">#!/usr/bin/env bash
+
+sum() {
+    # 定义了两个整型的局部变量
+    local -i count=$1
+    local -i result=$2
+
+    if (( count == 0 )); then
+        echo $result &amp;&amp; exit
+        # return $result # 这里并不是你想的那样
+    fi
+
+    result=$(( result + count ))
+    count=$(( count - 1 ))
+    sum $count $result
+}
+
+echo "Script path from cmd line: $0"
+echo "Args: $@"
+
+if (( $# &lt; 1 )); then
+    echo "Usage: $0 &lt;count&gt; ..."
+    exit 1
+elif (( $# &gt; 1)); then
+    echo "More then one args founded, we only take the first one as a integer"
+fi
+
+if [[ ! $1 =~ ^-?[0-9]+$ ]]; then
+    echo "The first argument should be integer"
+    exit 1
+fi
+
+result=`sum $1 0`
+echo "Sum from 1 -&gt; $1 is $result"
+</pre>
+</div>
+
+<p>
+上面这个例子有几个点需要注意一下
+</p>
+<ol class="org-ol">
+<li>检测第一个参数是否为数字时使用了正则表达式。此篇不做介绍</li>
+<li><p>
+sum 函数的返回值。
+虽然 bash 提供了 <code>return</code> 语句，但是并不如其他语言那样能返回任何东西。
+它只被设计为返回退出状态（一个整数）。上面输出 sum 结果的代码实际上时获取了
+sum 函数中所有写到标准输出中的值。获取状态使用 <code>#?</code> ，并不是 <code>=</code> 号:
+</p>
+<div class="org-src-container">
+<pre class="src shell">foo # call foo
+statOfFoo=$? # get state code of last call
+</pre>
+</div></li>
+</ol>
+
+<p>
+由于 bash 原生只支持整数，如果需要用到浮点数，就需要使用外部程序。一般使用 <code>bc</code><sup><a id="fnr.14" class="footref" href="#fn.14">14</a></sup>
+</p>
+<div class="org-src-container">
+<pre class="src shell">#!/usr/bin/env bash
+
+if (( $(bc &lt;&lt;&lt; "3.0 &gt; 1.5") )); then
+    echo '3.0 &gt; 1.5'
+fi
+
+a=$(bc -l &lt;&lt;&lt; "1.0/3.0")
+echo $a
+printf '%.4f\n' $a
+
+a=$(bc -l &lt;&lt;EOF
+1 + 2 + 3 / 2.0
+EOF
+ )
+
+echo $a
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>浮点数的比较需要使用到 bc</li>
+<li><code>bc -l</code> 整数计算时不做截断</li>
+<li>使用 bc 会碰到计算结果小于1的小数不显示小数点左侧的0的情况，上面展示了使用 printf 命令处理的方式</li>
+<li>这里还展示了 <a href="https://www.tldp.org/LDP/abs/html/here-docs.html">here documents</a> 的用法，可以读入复杂的表达式，而且不用考虑换行符和引号的问题</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2a21236" class="outline-2">
+<h2 id="org2a21236"><span class="section-number-2">7</span> Debug</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+看<a href="https://coolshell.cn/articles/1379.html">这篇</a>就足够了。简单讲：
+</p>
+<ul class="org-ul">
+<li><code>bash -x</code> 运行脚本整个脚本开启调试</li>
+<li><code>set -x</code> 和 <code>set +x</code> 在脚本中开启局部调试</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgdd114a6" class="outline-2">
+<h2 id="orgdd114a6"><span class="section-number-2">8</span> What Next?</h2>
+<div class="outline-text-2" id="text-8">
+<ul class="org-ul">
+<li><code>man bash</code> 看一下，里面啥都有</li>
+<li><a href="https://www.gnu.org/software/bash/manual/bash.html">https://www.gnu.org/software/bash/manual/bash.html</a></li>
+<li><a href="http://tldp.org/LDP/Bash-Beginners-Guide/html/">http://tldp.org/LDP/Bash-Beginners-Guide/html/</a></li>
+<li><a href="http://www.tldp.org/LDP/abs/html/">http://www.tldp.org/LDP/abs/html/</a></li>
+<li><a href="http://mywiki.wooledge.org">http://mywiki.wooledge.org</a></li>
+<li><a href="http://wiki.bash-hackers.org">http://wiki.bash-hackers.org</a> (需翻墙)</li>
+</ul>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://www.tldp.org/LDP/abs/html/io-redirection.html">https://www.tldp.org/LDP/abs/html/io-redirection.html</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://www.gnu.org/software/bash/manual/html_node/Pipelines.html">https://www.gnu.org/software/bash/manual/html_node/Pipelines.html</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+<code>[</code>  和 <code>[[</code>  的区别 <sup><a id="fnr.4" class="footref" href="#fn.4">4</a></sup> <sup>, </sup><sup><a id="fnr.5" class="footref" href="#fn.5">5</a></sup> <sup>, </sup><sup><a id="fnr.6" class="footref" href="#fn.6">6</a></sup>
+</p>
+<ul class="org-ul">
+<li><code>[</code> 使用了外部命令来执行判断</li>
+<li><code>[[</code> 内置，而且做了一些增强
+总的来说，尽量用 <code>[[]]</code> 就好</li>
+</ul></div></div>
+
+<div class="footdef"><sup><a id="fn.4" class="footnum" href="#fnr.4">4</a></sup> <div class="footpara"><p class="footpara">
+<a href="http://mywiki.wooledge.org/BashFAQ/031">http://mywiki.wooledge.org/BashFAQ/031</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.5" class="footnum" href="#fnr.5">5</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://stackoverflow.com/a/3427931">https://stackoverflow.com/a/3427931</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.6" class="footnum" href="#fnr.6">6</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://serverfault.com/questions/52034/what-is-the-difference-between-double-and-single-square-brackets-in-bash">https://serverfault.com/questions/52034/what-is-the-difference-between-double-and-single-square-brackets-in-bash</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.7" class="footnum" href="#fnr.7">7</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://www.gnu.org/software/bash/manual/html_node/Bash-Conditional-Expressions.html">GNU bash 条件表达式</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.8" class="footnum" href="#fnr.8">8</a></sup> <div class="footpara"><p class="footpara">
+<a href="http://mywiki.wooledge.org/ArithmeticExpression">算术上下文</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.9" class="footnum" href="#fnr.9">9</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://www.tldp.org/LDP/abs/html/internalvariables.html">https://www.tldp.org/LDP/abs/html/internalvariables.html</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.10" class="footnum" href="#fnr.10">10</a></sup> <div class="footpara"><p class="footpara">
+shell 脚本兼容性是一个非常麻烦的话题，并没有研究
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.11" class="footnum" href="#fnr.11">11</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://www.tldp.org/LDP/abs/html/untyped.html">https://www.tldp.org/LDP/abs/html/untyped.html</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.12" class="footnum" href="#fnr.12">12</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://stackoverflow.com/a/14525326">https://stackoverflow.com/a/14525326</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.13" class="footnum" href="#fnr.13">13</a></sup> <div class="footpara"><p class="footpara">
+这并不是正常的用法
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.14" class="footnum" href="#fnr.14">14</a></sup> <div class="footpara"><p class="footpara">
+bc 的功能比这里展示的要强许多，感兴趣可以 <code>man bc</code> 查看
+</p></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<div class="cc-license">
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/3.0/">
+<img alt="by-nc-sa-v3.0" style="border-width:0; margin:-3px;" src="./style/l/by-nc-sa/3.0/80x15.png" />
+如无特别说明本站所有作品均采用知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议进行许可
+</a>
+</div>
+</div>
+</body>
+</html>

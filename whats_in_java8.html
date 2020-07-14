@@ -1,0 +1,795 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-07-14 Tue 14:30 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>What&rsquo;s in Java8?</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yam" />
+<link rel="stylesheet" href="./style/org-base.css" />
+<link rel="stylesheet" href="./style/highlight/styles/vs.css">
+<script src="./style/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="./style/org-common.js"></script>
+<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="./style/org-base.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">What&rsquo;s in Java8?</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org59b2643">Labda Chops: Recipes for Simpler, More Expressive Code</a>
+<ul>
+<li><a href="#orge878a80">Null-Safe Navigation</a></li>
+<li><a href="#orgee73969">fist non-null object</a></li>
+<li><a href="#orgea92f74">Multi-method interfaces [17:00]</a></li>
+<li><a href="#orge82cbfc">Exception Transparency</a></li>
+<li><a href="#orga8f5ba4">Design Patterns</a>
+<ul>
+<li><a href="#org3bd79bd">Resource management</a></li>
+<li><a href="#orgcb78b0c">Laziness</a></li>
+<li><a href="#org57035ac">Using Lambda&rsquo;s for Type Safety</a></li>
+</ul>
+</li>
+<li><a href="#org460548d">Best practices</a></li>
+</ul>
+</li>
+<li><a href="#orgcb1ab9b">IBM developer/ j-understanding-functional-programming</a>
+<ul>
+<li><a href="#org2b2fe5e">basic concepts</a></li>
+<li><a href="#org82aa0bd">examples</a></li>
+<li><a href="#orgb25f94f">lambda</a>
+<ul>
+<li><a href="#org475d92a">中间操作</a></li>
+<li><a href="#org9e988b3">终结操作</a></li>
+</ul>
+</li>
+<li><a href="#orgf6e4abf">vavr</a></li>
+</ul>
+</li>
+<li><a href="#org5af370a">Java8 in action</a>
+<ul>
+<li><a href="#org77af5f2">Stream</a></li>
+<li><a href="#orge07cb1b">预定义收集器</a></li>
+<li><a href="#orgb4ce917">groupingBy</a></li>
+<li><a href="#org65cdeae">自定义 collector??</a></li>
+<li><a href="#orge7cd369">自定义 谓词？？</a></li>
+<li><a href="#orgeb09cca">parallel</a></li>
+<li><a href="#org8156cbf">Spliterator</a></li>
+<li><a href="#org39f629f">Functional Programming</a></li>
+<li><a href="#org8b8f356">用 optional 取代 null</a>
+<ul>
+<li><a href="#org6ea9e70">初始化操作</a></li>
+<li><a href="#orgc151948">获取值的方式</a></li>
+<li><a href="#org14e7e4b">判断操作</a></li>
+<li><a href="#org03e1e05">中间操作</a></li>
+<li><a href="#org8b29985">基础类型的 Optional 对象不建议使用</a></li>
+</ul>
+</li>
+<li><a href="#org2cede17">CompletableFuture</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="ABSTRACT">
+<p>
+做 java8 分享的时候随手记
+</p>
+
+</div>
+
+
+<div id="outline-container-org59b2643" class="outline-2">
+<h2 id="org59b2643">Labda Chops: Recipes for Simpler, More Expressive Code</h2>
+<div class="outline-text-2" id="text-org59b2643">
+<div class="org-src-container">
+<pre class="src java">Map&lt;City, Double&gt; enginnerSalaryByCity = employees.stream()
+    .filter(e -&gt; e.getJobType().equals("Engineer"))
+    .collect(Collectors.groupingBy(
+                                   Employee::getCity,
+                                   Collectors.averagingDouble(Employee::getSalary)));
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orge878a80" class="outline-3">
+<h3 id="orge878a80">Null-Safe Navigation</h3>
+<div class="outline-text-3" id="text-orge878a80">
+<p>
+if anyting along the way is null, returns null
+</p>
+
+<p>
+in groovy:
+</p>
+<div class="org-src-container">
+<pre class="src groovy">employee?.getAddress()?.getCity()?.toString()
+</pre>
+</div>
+
+<p>
+in java:
+</p>
+
+<p>
+A lot of if-block
+</p>
+
+<p>
+in java8: Optional
+</p>
+<div class="org-src-container">
+<pre class="src java">String cityName = Optional.ofNullable(employee)
+    .map(Employee::getAddress)
+    .map(Address::getCity)
+    .map(City::toString)
+    .orElse(null);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgee73969" class="outline-3">
+<h3 id="orgee73969">fist non-null object</h3>
+<div class="outline-text-3" id="text-orgee73969">
+<p>
+in commons-lang: ObjectUtils:firstNonNull &lt;&#x2013; fine if values are cheap to provide
+</p>
+
+<p>
+Use of suppliers can avoid work, or parallelize it
+</p>
+
+<div class="org-src-container">
+<pre class="src java">Recommendations recommendations = firstNonNull(
+                                               customer.getCaret()::getRecommendations,
+                                               () -&gt; getRecommendationsFor(customer.history()),
+                                               this:getBestSellers);
+
+public static &lt;T&gt; T firstNonNull(Supplier&lt;T&gt;... values) {
+    return Stream.of(values) // .parallel()
+        .map(Supplier::get)
+        .filter(Objects::nonNull)
+        .findFirst().orElse(null);
+        }
+
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgea92f74" class="outline-3">
+<h3 id="orgea92f74">Multi-method interfaces [17:00]</h3>
+<div class="outline-text-3" id="text-orgea92f74">
+<p>
+Helper methods can create instances from one or more lambdas
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge82cbfc" class="outline-3">
+<h3 id="orge82cbfc">Exception Transparency</h3>
+<div class="outline-text-3" id="text-orge82cbfc">
+<div class="org-src-container">
+<pre class="src java">public void createFiels(List&lt;File&gt; files) throws IOException {
+    files.forEach(File:: createNewFile);
+}
+
+// Error:
+//   incompatible thrown types java.io.IOException in method reference
+</pre>
+</div>
+
+
+<p>
+do try-cache in froEach lambda in not a good idea
+</p>
+
+<p>
+use generics is not a good idea too
+</p>
+<ul class="org-ul">
+<li>only works when you only have one throw type</li>
+<li>signatures get messy</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src java">public interface EConsumer&lt;T, E extends Throwable&gt; {
+    void accept(T t) throws E;
+}
+
+public interface Iterable&lt;T&gt; {
+    //...
+
+    default &lt;E extends Throwable&gt; void forEach(Econsumer&lt;? super T,E&gt; action) throws E {}
+}
+</pre>
+</div>
+
+<p>
+use joo&lt;lambda&gt; library (<a href="https://github.com/jOOQ/jOOL">https://github.com/jOOQ/jOOL</a>)
+</p>
+
+<div class="org-src-container">
+<pre class="src java">// use "Uncheck" Exceptions via jOOQ
+
+@FunctionalInterface public interface CheckedConsumer&lt;T&gt; {
+    void accept(T t) throws Throwable;
+}
+
+public static &lt;T, R&gt; Consumer&lt;T, R&gt; consumer(CheckedConsumer&lt;T,R&gt; function){
+    // ...
+}
+
+public void createFiles(List&lt;File&gt; files) { // no throws at all ...
+    files.forEach(Unchecked.consumer(File::createNewFile));
+}
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orga8f5ba4" class="outline-3">
+<h3 id="orga8f5ba4">Design Patterns</h3>
+<div class="outline-text-3" id="text-orga8f5ba4">
+</div>
+<div id="outline-container-org3bd79bd" class="outline-4">
+<h4 id="org3bd79bd">Resource management</h4>
+<div class="outline-text-4" id="text-org3bd79bd">
+<div class="org-src-container">
+<pre class="src java">// in java 6
+String result;
+InputStream stream = openStream();
+
+try {
+    result = process(stream);
+} finally {
+    stream.close();
+}
+
+// in java 8
+
+try(InputStream steram = openStream()) {
+    result = process(stream);
+}
+
+// 1. result = process(openStream()); // resouce leak
+// 2. AutoClosable needed
+</pre>
+</div>
+
+<p>
+Can not work with Lock
+</p>
+
+<div class="org-src-container">
+<pre class="src java">try(Lock lock = acquireLock()) {
+    Account account = getAccount();
+    debit(account);
+}
+
+// Lock can not be converted to AutoClosable
+</pre>
+</div>
+
+<p>
+manage resource with lambda
+</p>
+<div class="org-src-container">
+<pre class="src java">public class AccountManager {
+    private Lock lock;
+    private Account account;
+
+    public &lt;T&gt; T workWithAccount(Consumer&lt;Account&gt; work) {
+        lock.lock();
+        try {
+            work.accept(account);
+        } finally {
+            lock.unlock();
+        }
+
+    }
+}
+
+accountManager.workWithAccount(account -&gt; debit(account));
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgcb78b0c" class="outline-4">
+<h4 id="orgcb78b0c">Laziness</h4>
+<div class="outline-text-4" id="text-orgcb78b0c">
+<ul class="org-ul">
+<li>Lambda&rsquo;s are greate for lazy evaluation</li>
+<li>Vavr (formerly javaslang) has a good lazy</li>
+<li>Note - evaluation may will happen on a different thread!</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org57035ac" class="outline-4">
+<h4 id="org57035ac">Using Lambda&rsquo;s for Type Safety</h4>
+<div class="outline-text-4" id="text-org57035ac">
+<ul class="org-ul">
+<li>Many APIs rely on String representations fo method anmes
+<ul class="org-ul">
+<li>&ldquo;Stringly typed&rdquo;</li>
+<li>Refactoring tools are generally unaware of this</li>
+<li>Typos not caught at compile time</li>
+</ul></li>
+<li>Lambda expressions are often a good alternative</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src java">// Creating a comparator: commons-beanutils
+ComparatorChain comparator = new ComparatorChain(new BeanComparator&lt;&gt;("lastName"));
+comparator.addComparator(new BeanComparator&lt;&gt;("firstName"));
+
+@SuppressWarnings("unchecked")
+Comparator&lt;Person&gt; personComparator = comparator;
+
+
+// in java8
+
+Comparator&lt;Person&gt; Comparator = Comparator.comparing(Person::getLastName)
+    .thenComparing(Person::getFirstName);
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org460548d" class="outline-3">
+<h3 id="org460548d">Best practices</h3>
+<div class="outline-text-3" id="text-org460548d">
+<ul class="org-ul">
+<li>Prefer multiple single-method interfaces t larger interfaces
+<ul class="org-ul">
+<li>consider factory methods taking in lambdas</li>
+</ul></li>
+<li>Use standard java.util.function class where applicable</li>
+</ul>
+<p>
+or corresponding org.jooq.lambda class if Exception transparency is an issue
+</p>
+<ul class="org-ul">
+<li>Avoid overloading method name to accept different lambdas of the same &ldquo;shape&rdquo;</li>
+<li>Forces clients to cast their lambdas</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgcb1ab9b" class="outline-2">
+<h2 id="orgcb1ab9b">IBM developer/ j-understanding-functional-programming</h2>
+<div class="outline-text-2" id="text-orgcb1ab9b">
+<p>
+<a href="https://www.ibm.com/developerworks/cn/java/j-understanding-functional-programming-1/">https://www.ibm.com/developerworks/cn/java/j-understanding-functional-programming-1/</a>
+</p>
+</div>
+
+<div id="outline-container-org2b2fe5e" class="outline-3">
+<h3 id="org2b2fe5e">basic concepts</h3>
+<div class="outline-text-3" id="text-org2b2fe5e">
+<ul class="org-ul">
+<li>λ-calculus</li>
+<li>referential transparency</li>
+<li>high-order function</li>
+<li>memoization</li>
+</ul>
+
+<pre class="example">
+ argument     -&gt;      value
+{--------}         {--------} 
+  domain     -&gt;      codomain
+                    {-------------}
+                         image
+{---------- graph -----------}
+</pre>
+
+<blockquote>
+<p>
+了解函数式编程的人可能听说过纯函数和副作用等名称。这两个概念与引用透明性紧密相关。纯函数需要具备两个特征：
+</p>
+
+<p>
+对于相同的输入参数，总是返回相同的值。
+求值过程中不产生副作用，也就是不会对运行环境产生影响。
+对于第一个特征，如果是从数学概念上抽象出来的函数，则很容易理解。比如 f(x)=x+1 和 g(x)=x*x 这样的函数，都是典型的纯函数。如果考虑到一般编程语言中出现的方法，则函数中不能使用静态局部变量、非局部变量，可变对象的引用或 I/O 流。这是因为这些变量的值可能在不同的函数执行中发生变化，导致产生不一样的输出。第二个特征，要求函数体中不能对静态局部变量、非局部变量，可变对象的引用或 I/O 流进行修改。这就保证了函数的执行过程中不会对外部环境造成影响。纯函数的这两个特征缺一不可。
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org82aa0bd" class="outline-3">
+<h3 id="org82aa0bd">examples</h3>
+<div class="outline-text-3" id="text-org82aa0bd">
+<p>
+求和与求最大值都是 reduce
+</p>
+
+<div class="org-src-container">
+<pre class="src java">reduce(students, (mark, student) -&gt; Math.max(student.getMark(), mark), 0);
+reduce(students, (total, student) -&gt; total+=student.getMark(), 0);
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Function&lt;T, R&gt;</li>
+<li>BiFunction&lt;T, U, R&gt;</li>
+<li>Consumer&lt;T&gt;：接受一个输入，没有输出。抽象方法为 void accept(T t)。</li>
+<li>Supplier&lt;T&gt;：没有输入，一个输出。抽象方法为 T get()。</li>
+<li>Predicate&lt;T&gt;：接受一个输入，输出为 boolean 类型。抽象方法为 boolean test(T t)。</li>
+<li>UnaryOperator&lt;T&gt;：接受一个输入，输出的类型与输入相同，相当于 Function&lt;T, T&gt;。</li>
+<li>BinaryOperator&lt;T&gt;：接受两个类型相同的输入，输出的类型与输入相同，相当于 BiFunction&lt;T,T,T&gt;。</li>
+<li>BiPredicate&lt;T, U&gt;：接受两个输入，输出为 boolean 类型。抽象方法为 boolean test(T t, U u)。</li>
+</ul>
+
+<p>
+高阶函数以其他函数作为输入，或产生其他函数作为输出。高阶函数使得函数的组合成为可能，更有利于函数的复用。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb25f94f" class="outline-3">
+<h3 id="orgb25f94f">lambda</h3>
+<div class="outline-text-3" id="text-orgb25f94f">
+<p>
+JSR 335（Lambda Expressions for the Java Programming Language）
+</p>
+</div>
+
+
+<div id="outline-container-org475d92a" class="outline-4">
+<h4 id="org475d92a">中间操作</h4>
+<div class="outline-text-4" id="text-org475d92a">
+<ul class="org-ul">
+<li>map：通过一个 Function 把一个元素类型为 T 的流转换成元素类型为 R 的流。</li>
+<li>flatMap：通过一个 Function 把一个元素类型为 T 的流中的每个元素转换成一个元素类型为 R 的流，再把这些转换之后的流合并。</li>
+<li>filter：过滤流中的元素，只保留满足由 Predicate 所指定的条件的元素。</li>
+<li>distinct：使用 equals 方法来删除流中的重复元素。</li>
+<li>limit：截断流使其最多只包含指定数量的元素。</li>
+<li>skip：返回一个新的流，并跳过原始流中的前 N 个元素。</li>
+<li>sorted：对流进行排序。</li>
+<li>peek：返回的流与原始流相同。当原始流中的元素被消费时，会首先调用 peek 方法中指定的 Consumer 实现对元素进行处理。</li>
+<li>dropWhile：从原始流起始位置开始删除满足指定 Predicate 的元素，直到遇到第一个不满足 Predicate 的元素。</li>
+<li>takeWhile：从原始流起始位置开始保留满足指定 Predicate 的元素，直到遇到第一个不满足 Predicate 的元素。</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9e988b3" class="outline-4">
+<h4 id="org9e988b3">终结操作</h4>
+<div class="outline-text-4" id="text-org9e988b3">
+<ul class="org-ul">
+<li>reduce:</li>
+<li>max/min</li>
+<li>count</li>
+<li>allMatch/nonMatch/anyMatch &lt;&#x2013; Predicate</li>
+<li>findFirst/findAny &#x2013;&gt; Optional</li>
+<li>collect  &#x2013; java.util.stream.Collector::toList/toSet/toMap/joining/&lt;math_about&gt;</li>
+<li>groupingBy &lt;&#x2013; Function(key) &#x2013;&gt; Function-&gt;(key)-&gt;List&lt;item&gt;</li>
+<li>partitioningBy &lt;&#x2013; Predicate &#x2013;&gt; simalir to groupingBy, key is boolean(means 2 groups at most)</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgf6e4abf" class="outline-3">
+<h3 id="orgf6e4abf">vavr</h3>
+</div>
+</div>
+
+<div id="outline-container-org5af370a" class="outline-2">
+<h2 id="org5af370a">Java8 in action</h2>
+<div class="outline-text-2" id="text-org5af370a">
+</div>
+<div id="outline-container-org77af5f2" class="outline-3">
+<h3 id="org77af5f2">Stream</h3>
+<div class="outline-text-3" id="text-org77af5f2">
+<p>
+stream 的来源
+</p>
+<ul class="org-ul">
+<li>集合流 &lt;- 集合/数组</li>
+<li>文件流</li>
+<li>数值流 避免拆装箱</li>
+<li>无限流</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src java">Arrays.stream;
+// 无限流
+Stream.iterate(&lt;init value&gt;, (n) -&gt; n + 1);
+// 无限流
+Stream.generate(Supplier)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge07cb1b" class="outline-3">
+<h3 id="orge07cb1b">预定义收集器</h3>
+<div class="outline-text-3" id="text-orge07cb1b">
+<p>
+Collectors 中定义的工厂方法
+</p>
+
+<ul class="org-ul">
+<li>maxBy</li>
+<li>sumingInt</li>
+<li>averagingInt</li>
+<li>joining</li>
+<li>reducing</li>
+<li>groupingBy</li>
+<li>partitioningBy</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb4ce917" class="outline-3">
+<h3 id="orgb4ce917">groupingBy</h3>
+<div class="outline-text-3" id="text-orgb4ce917">
+<p>
+第二个参数可以完成多级分组和对分组的 collect。
+</p>
+
+<div class="org-src-container">
+<pre class="src java">public static &lt;T, K&gt; Collector&lt;T, ?, Map&lt;K, List&lt;T&gt;&gt;&gt;
+    groupingBy(Function&lt;? super T, ? extends K&gt; classifier) {
+    return groupingBy(classifier, toList());
+}
+
+public static &lt;T, K, A, D&gt;
+    Collector&lt;T, ?, Map&lt;K, D&gt;&gt; groupingBy(Function&lt;? super T, ? extends K&gt; classifier,
+                                          Collector&lt;? super T, A, D&gt; downstream) {
+    return groupingBy(classifier, HashMap::new, downstream);
+}
+
+public static &lt;T, K, D, A, M extends Map&lt;K, D&gt;&gt;
+    Collector&lt;T, ?, M&gt; groupingBy(Function&lt;? super T, ? extends K&gt; classifier,
+                                  Supplier&lt;M&gt; mapFactory,
+                                  Collector&lt;? super T, A, D&gt; downstream) {}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org65cdeae" class="outline-3">
+<h3 id="org65cdeae">自定义 collector??</h3>
+</div>
+<div id="outline-container-orge7cd369" class="outline-3">
+<h3 id="orge7cd369">自定义 谓词？？</h3>
+</div>
+
+<div id="outline-container-orgeb09cca" class="outline-3">
+<h3 id="orgeb09cca">parallel</h3>
+<div class="outline-text-3" id="text-orgeb09cca">
+<ul class="org-ul">
+<li>装箱</li>
+<li>limit/findFirst 依赖元素顺序的操作，并行之后效率会更低</li>
+<li>流背后的数据结构是否容易分解，例如：ArrayList 拆分效率比 LinkedList 低</li>
+<li>Comibner 操作的代价是否更大，如果更大就没有必要</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org8156cbf" class="outline-3">
+<h3 id="org8156cbf">Spliterator</h3>
+</div>
+
+<div id="outline-container-org39f629f" class="outline-3">
+<h3 id="org39f629f">Functional Programming</h3>
+<div class="outline-text-3" id="text-org39f629f">
+<ul class="org-ul">
+<li>没有副作用</li>
+<li>不抛出异常</li>
+<li>引用透明性</li>
+<li>Java8 不支持尾递归</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src java">static List&lt;List&lt;Integer&gt;&gt; subsets(List&lt;Integer&gt; list) {
+    if (list.isEmpty()) {
+        List&lt;List&lt;Integer&gt;&gt; ans = new ArrayList&lt;&gt;();
+        ans.add(Collections.emptyList());
+        return ans;
+    }
+
+    Integer first = list.get(0);
+    List&lt;Integer&gt; rest = list.subList(1, list.size());
+
+    List&lt;List&lt;Integer&gt;&gt; subans = subsets(rest);
+    List&lt;List&lt;Integer&gt;&gt; subans2 = insertAll(first, subans);
+    return concat(subans, subans2);
+}
+
+static List&lt;List&lt;Integer&gt;&gt; insertAll(Integer first, List&lt;List&lt;Integer&gt;&gt; lists) {
+    List&lt;List&lt;Integer&gt;&gt; result = new ArrayList();
+    for (List&lt;Integer&gt; list: lists) {
+        List&lt;Integer&gt; copyList = new ArrayList&lt;&gt;();
+        copyList.add(first);
+        copyList.addAll(list);
+        result.add(copyList);
+    }
+    return result;
+}
+
+static List&lt;List&lt;Integer&gt;&gt; concat(List&lt;List&lt;Integer&gt;&gt; a, List&lt;List&lt;Integer&gt;&gt; b) {
+    a.addAll(b);
+    return a;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8b8f356" class="outline-3">
+<h3 id="org8b8f356">用 optional 取代 null</h3>
+<div class="outline-text-3" id="text-org8b8f356">
+<div class="org-src-container">
+<pre class="src java">Optional.empty();
+Optional.of(car); // car == null 时，立刻抛出异常
+Optional.ofNullable(car);
+
+Optional&lt;Wheel&gt; carWheel = optCar.map(Car::getWheel);
+
+person.map(Person::getCar)  // Optional&lt;Person&gt;
+    .map(Car::getInsurance) // Optional&lt;Optional&lt;Car&gt;&gt; // compile error
+    .map(Insurance::getName)
+    .orElse("Unknown");
+
+
+person.flatMap(Person::getCar)  // Optional&lt;Person&gt;
+    .flatMap(Car::getInsurance) // Optional&lt;Car&gt;
+    .map(Insurance::getName)
+    .orElse("Unknown");
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org6ea9e70" class="outline-4">
+<h4 id="org6ea9e70">初始化操作</h4>
+<div class="outline-text-4" id="text-org6ea9e70">
+<ul class="org-ul">
+<li>empty</li>
+<li>of 值为 null 直接抛出 NPE</li>
+<li>ofNullable 值为 null 时返回empty的 Optional</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc151948" class="outline-4">
+<h4 id="orgc151948">获取值的方式</h4>
+<div class="outline-text-4" id="text-orgc151948">
+<ul class="org-ul">
+<li>get() 不存在抛出 NoSuchElementException 异常</li>
+<li>orElse(T other) 不存在提供默认值</li>
+<li>orElseGet(Supplier&lt;? extends T&gt; other) orElse 的延迟初始化版本</li>
+<li>orElseThrow(Supplier&lt;? extends X&gt; exceptionSupplier) 不存在抛出自定义的异常</li>
+<li>ifPresent(Consumer&lt;? super T&gt;) 有值就继续执行 consumer，否则什么也不干</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org14e7e4b" class="outline-4">
+<h4 id="org14e7e4b">判断操作</h4>
+<div class="outline-text-4" id="text-org14e7e4b">
+<ul class="org-ul">
+<li>ifPresent() 值存在返回true</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org03e1e05" class="outline-4">
+<h4 id="org03e1e05">中间操作</h4>
+<div class="outline-text-4" id="text-org03e1e05">
+<ul class="org-ul">
+<li>filter</li>
+<li>map</li>
+<li>flatMap</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org8b29985" class="outline-4">
+<h4 id="org8b29985">基础类型的 Optional 对象不建议使用</h4>
+<div class="outline-text-4" id="text-org8b29985">
+<p>
+不支持最有用的 map/flatMap/filter，另外基础类型的 Optional 对象不能组合成 普通 Optional 对象
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2cede17" class="outline-3">
+<h3 id="org2cede17">CompletableFuture</h3>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div class="cc-license">
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/3.0/">
+<img alt="by-nc-sa-v3.0" style="border-width:0; margin:-3px;" src="./style/l/by-nc-sa/3.0/80x15.png" />
+如无特别说明本站所有作品均采用知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议进行许可
+</a>
+</div>
+</div>
+</body>
+</html>
