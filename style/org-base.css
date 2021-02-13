@@ -5,7 +5,8 @@
 }
 
 body {
-    font-family: 'Arvo', 'Georgia', 'Hiragino Sans GB', sans-serif;
+    /* font-family: 'Arvo', 'Georgia', 'Hiragino Sans GB', sans-serif; */
+    font-family: 'Arvo', 'Georgia', sans-serif;
     color: #333333;
     /* background: #4C9FA8 url(./background2.jpg) repeat 0 0; 
     background-repeat: repeat; */
