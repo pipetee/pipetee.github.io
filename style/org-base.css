@@ -5,7 +5,7 @@
 }
 
 body {
-    font-family: 'Arvo', 'Georgia', 'Times', 'Hei', 'Hiragino Sans GB', sans-serif;
+    font-family: 'Arvo', 'Georgia', 'Hiragino Sans GB', sans-serif;
     color: #333333;
     /* background: #4C9FA8 url(./background2.jpg) repeat 0 0; 
     background-repeat: repeat; */
@@ -39,7 +39,7 @@ h1:after {
 
 }
 
-#text-footnotes:before, .ABSTRACT:after, #table-of-contents:after, .cc-license:before {
+#text-footnotes:before, .ABSTRACT:after, #table-of-contents:after {
     font-size: 13px;
     content: "";
     display: block;
@@ -54,7 +54,21 @@ h1:after {
     font-size:12px !important;
     font-style: italic;
     color: grey;
-    text-align: right;
+}
+
+.sign:before {
+    font-size: 13px;
+    content: "";
+    display: block;
+    background-color: #dcdbda;
+    margin: 10px 0px 0px -5px;
+    height: 2px;
+    width: 100px;
+}
+
+.sign {
+    font-size:12px !important;
+    font-style: italic;
 }
 
 .cc-license a:link, .cc-license a:visited, .cc-license a:hover, .cc-license a:active {
@@ -91,7 +105,7 @@ h1:after {
 cite, code, pre, tt, samp {
     font-family:
         'PT Mono', 'Lucida Console', 'Consolas','Deja Vu Sans Mono','Bitstream Vera Sans Mono',
-        'Fira Code', 'Monaco','Hei', 'Hiragino Sans GB', monospace;
+        'Fira Code', 'Monaco', 'Hiragino Sans GB', monospace;
     font-size: 13px;
     line-height: 1.2em;
 }
@@ -125,7 +139,7 @@ pre {
 
 h1, h2, h3, h4, h5 {
     font-family:
-        Arvo, Georgia, Times, "Kaiti SC", "KaiTi",  'Hei', 'Hiragino Sans GB', serif;
+        Arvo, Georgia, "Kaiti SC", "KaiTi", 'Hiragino Sans GB', serif;
     color: #600000;
 }
 
